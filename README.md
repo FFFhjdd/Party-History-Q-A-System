@@ -1,4 +1,4 @@
-基于中国共产党-百年大事记的智能问答系统的设计与实现。
+![image](https://github.com/user-attachments/assets/b16e8679-5f52-42af-9d08-f191600d421d)基于中国共产党-百年大事记的智能问答系统的设计与实现。
 通过构建知识图谱，并利用最大正向匹配算法进行查询。
 
 知识图谱的构建成果
@@ -9,4 +9,8 @@
 
 ![image](https://github.com/user-attachments/assets/01974471-de58-4bb4-b27b-6b779a7f21c5)
 
-
+最终实现效果
+搜索引擎
+![image](https://github.com/user-attachments/assets/70b1636d-8a64-4adb-b0ae-d9cfba0d6548)
+问答系统
+![image](https://github.com/user-attachments/assets/aecdb84d-b3bb-4fbc-91ae-e5cfc464ec99)
