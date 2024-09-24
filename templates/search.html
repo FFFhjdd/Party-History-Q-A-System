@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关键词搜索</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1;
+            filter: blur(8px);
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .result-item {
+            word-wrap: break-word;
+        }
+        .form-control {
+            background: url('{{ url_for('static', filename='data/3.jpg') }}') no-repeat center right;
+            background-size: contain;
+            padding-right: 60px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="container mt-5">
+        <h1 class="mb-4">关键词搜索</h1>
+        <div class="btn-container mb-4">
+            {% if current_user.is_authenticated %}
+            <span>你好, {{ current_user.username }}</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">注销</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary">登录</a>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary">注册</a>
+            {% endif %}
+        </div>
+        <form action="/search" method="get" class="mb-4" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="keyword">关键词搜索:</label>
+                <input type="text" class="form-control" id="keyword" name="keyword" value="{{ keyword }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">搜索</button>
+        </form>
+        <div class="btn-container mb-4">
+            <a href="/" class="btn btn-secondary">返回查询</a>
+            <a href="http://localhost:7474" class="btn btn-info" target="_blank">查看数据库</a>
+        </div>
+        {% if not keyword %}
+        <p>请输入要搜索的关键词</p>
+        {% elif results %}
+        <h2>搜索结果:</h2>
+        <ul class="list-group">
+            {% for result in results %}
+            <li class="list-group-item result-item">{{ result.name }} ({{ result.label }})</li>
+            {% endfor %}
+        </ul>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('search', keyword=keyword, page=page-1) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% for p in range(1, total_pages + 1) %}
+                <li class="page-item {% if page == p %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('search', keyword=keyword, page=p) }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('search', keyword=keyword, page=page+1) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% else %}
+        <p>未找到相关结果</p>
+        {% endif %}
+    </div>
+    <script>
+        function validateForm() {
+            var keyword = document.getElementById("keyword").value;
+            if (keyword.trim() === "") {
+                alert("请输入要搜索的关键词");
+                return false;
+            }
+            return true;
+        }
+
+        // 延迟加载背景图片
+        document.body.style.backgroundImage = "url('{{ url_for('static', filename='data/4.jpg') }}')";
+    </script>
+</body>
+</html>
